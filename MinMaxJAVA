@@ -1,0 +1,102 @@
+///Main: minmax.java
+-----------------------------------------------------------------------------------------------------------
+package minmax;
+import java.util.Scanner;
+/**
+ *
+ * @author quang
+ * MD, khi chay thay doi DL, chi viet 1 luong va 2 doi tuong
+ */
+public class MinMax {
+    //Thuoc tinh static
+    //thong qua static de den cac phuong thuc
+    static Scanner sc = new Scanner(System.in);
+    static int a[];
+    static int n;
+    
+    public static void Nhapmang(){
+        System.out.println("Nhap so phan tu n: ");
+        n = sc.nextInt();
+        a = new int[n];
+        for(int i = 0; i<n; i++){
+            System.out.print("a["+i+"] = ");
+            a[i] = sc.nextInt();
+        }
+    }
+    
+    public static void Xuatmang(){
+        for(int i = 0; i<a.length;i++){
+            System.out.print(a[i]+" ");
+        }
+    }
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) throws InterruptedException{
+        System.out.println("Nhap mang: ");
+        Nhapmang();
+         System.out.println("Xuat mang: ");
+        Xuatmang();
+        //chia du lieu thanh 2 phan
+        Thread_Minmax t1 = new Thread_Minmax();
+        Thread kt1 = new Thread(t1);
+        Thread_Minmax t2 = new Thread_Minmax();
+        Thread kt2 = new Thread(t2);
+        
+        int vitri = a.length/2;
+        t1.a = new int[vitri];
+        t2.a = new int[a.length-vitri];
+        
+        //Tach du lieu thanh 2 mang
+        int dem1=0,dem2=0;
+        for(int i = 0; i<a.length;i++){
+            if(i < vitri) {
+                t1.a[dem1] = a[i];
+                dem1++;
+            }else{
+                t2.a[dem2] = a[i];
+                dem2++;
+            }
+        }
+        //Cho 2 luong chay song song
+        kt1.start();
+        kt2.start();
+        kt2.join();
+        if(t1.max > t2.max)
+            System.out.println("\n Max: "+t1.max);
+        else
+            System.out.println("Max: "+t2.max);
+        if(t1.min < t2.min)
+            System.out.println("Min: "+t1.min);
+        else
+            System.out.println("Min: "+t2.min);
+    }
+    
+}
+-----------------------------------------------------------------------------------------------------------
+thread_minmax.java:
+        
+        package minmax;
+
+/**
+ *
+ * @author quang
+ */
+public class Thread_Minmax implements Runnable{
+    int max,min;
+    int a[];
+    @Override
+    public void run() {
+        TimMinMax();
+    }
+    
+    public void TimMinMax(){
+        max = a[0];
+        min = a[0];
+        for(int i = 1; i<a.length;i++){
+            if(max < a[i]) max = a[i];
+            if(min > a[i]) min = a[i];
+        }
+    }
+}
+
