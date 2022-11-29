@@ -1,0 +1,64 @@
+//Tinh trung binh cong cac so chan cua mang
+#include <omp.h>
+#include <iostream>
+using namespace std;
+
+void NhapM(int *a,int n){
+	for(int i = 0; i < n; i++){
+		cout<<"Nhap phan tu thu a["<<i<<"]= ";
+		cin>>a[i];
+	}
+}
+
+int TBC(int *a, int n){
+	float sum = 0;
+	int dem = 0;
+	float tbc = 0;	
+	#pragma omp parallel for
+		for(int i = 0; i < n; i++){
+			if(a[i] % 2 == 0){
+				sum += a[i];
+				dem++;
+			}
+		}
+	tbc = sum/dem;
+	cout<<"Trung binh cong cac so chan = "<<tbc;
+	return tbc;
+}
+
+void swap(int &a, int &b){
+	int tg = a; 
+		a = b;
+		b = tg;
+}
+
+void bubble_sort(int *a,int n){
+	for(int i = 0; i < n-1; i++){
+		int first = i % 2; //sap xep 2 luong chan le
+		#pragma omp parallel for shared(a,first) 
+		for(int j = first; j < n-1; j+=2){
+			cout<<"\nexecuting ..."<<omp_get_thread_num()<<"\n"<<j;
+			if(a[j]>a[j+1]){
+				swap(a[j],a[j+1]);
+			}
+		}
+	}
+}
+
+
+void xuatsx(int *a,int n){
+	for(int i = 0; i < n; i++){
+		cout<<a[i];
+	}	
+}
+
+int main() {
+	int a[1000];
+	int n;
+	cout<<"Nhap so phan tu cua mang: "; cin>>n;
+	NhapM(a,n);
+	TBC(a,n);
+	cout<<"\n Sap xep mang";
+	bubble_sort(a,n);
+	xuatsx(a,n);
+}
