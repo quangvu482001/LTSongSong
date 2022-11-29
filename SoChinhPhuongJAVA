@@ -1,0 +1,126 @@
+main:
+----------------------------------------------------------------------------------------------------
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package kiemtrab2;
+
+import java.util.Scanner;
+
+/**
+ *
+ * @author quang
+ */
+public class KiemtraB2 {
+    static Scanner sc = new Scanner(System.in);
+    static int[] a;
+    static int n;
+    
+     public static void NhapMang() {
+        System.out.print("Nhap so phan tu cua mang: ");
+        n = sc.nextInt();
+        a = new int[n];
+        for (int i = 0; i < n; i++) {
+            System.out.print("a[" + i + "] = ");
+            a[i] = sc.nextInt();
+        }
+    }
+
+    // xuat mang
+    public static void XuatMang(int[] a) {
+        for (int i = 0; i < n; i++) {
+            System.out.print(a[i] + " ");
+        }
+        System.out.println();
+    }
+    
+    public static void main(String[] args) throws InterruptedException {
+        NhapMang();
+        XuatMang(a);
+
+        //tao doi tuong
+        thread1 ft = new thread1(a);
+        thread2 st = new thread2(a);
+        // bat dau thread thu nhat
+        Thread t1 = new Thread(ft);
+        Thread t2 = new Thread(st);
+
+        t1.start();
+        t2.start();
+        t1.join();
+    }
+}
+----------------------------------------------------------------------------------------------------
+thread1.java:
+      package kiemtrab2;
+
+/**
+ *
+ * @author quang
+ */
+public class thread1 implements Runnable{
+    int[] a;
+
+    public thread1(int[] a) {
+        this.a = a;
+    }
+
+    @Override
+    public void run() {
+        uoc(a);
+    }
+
+    // tim cac uoc
+    public void uoc(int[] a) {
+        for (int k : a) {
+            if (k % 2 != 0) {
+                System.out.print("Uoc cua " + k + " la: ");
+                for (int i = 1; i <= k; i++) {
+                    if (k % i == 0) {
+                        System.out.print(i + " ");
+                    }
+                }
+            }
+        }
+        }
+}
+        
+------------------------------------------------------------------------------------------------------------------------------
+thead2.java
+
+
+  package kiemtrab2;
+
+/**
+ *
+ * @author quang
+ */
+public class thread2 implements Runnable{
+   int[] a;
+
+    @Override
+    public void run() {
+        sochinhphuong(a);
+    }
+
+    public thread2(int[] a) {
+        this.a = a;
+    }
+
+    // neu mang co so chan thi in ra cac so chinh phuog
+    public void sochinhphuong(int[] a) {
+        for (int k : a) {
+            if (k % 2 == 0) {
+                System.out.print("So chinh phuong nho hon " + k + " la: ");
+                for (int i = 1; i <= k; i++) {
+                    if (Math.sqrt(i) % 1 == 0) {
+                        System.out.print(i + " ");
+                    }
+                }
+            }
+        }
+    }
+}
+
