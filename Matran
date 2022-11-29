@@ -1,0 +1,64 @@
+#include <omp.h>
+#include <stdio.h>
+#include <malloc.h>
+#include <stdlib.h>
+
+void NhanMT(int *a, int *b, int *c, int m, int n,int p){
+//	int j,j,k1;
+	for(int i = 0; i < m; i++){
+		for(int j = 0; j < p; j++){
+			*(c+(i*m+j)) = 0;
+			#pragma omp parallel for
+				for(int k1 = 0; k1 < n; k1++){
+					*(c+(i*m+j))=*(c+(i*m+j))+*(a+(i*m+k1)) * *(b+(j*m+k1));
+				}
+		}
+	}	
+}
+
+void NhapMT(int *a,int m,int n){
+	for(int i = 0; i < m; i++){
+		for(int j = 0; j < n; j++){
+			printf("[%d][%d] = ", i, j);
+			scanf("%d", (a + i*m + j));
+		}
+	}
+}
+
+void InMT(int *a, int m, int n){
+	for(int i = 0; i < m; i++){
+		for(int j = 0; j < n; j++){
+			printf("%d\t", *(a + i*m + j));
+		}
+		printf("\n");
+	}
+}
+
+int main() {
+	int *a,*b,*c;
+	int m,n,p,i,j;
+	printf("Nhap so hang cua ma tran 1: "); scanf("%d",&m);
+	printf("Nhap so cot cua ma tran 1:"); scanf("%d",&n);
+	printf("Nhap so cot cua ma tran 2:"); scanf("%d",&p);
+	a = (int *)malloc(m*n * sizeof(int *));
+	b = (int *)malloc(n*p * sizeof(int *));
+	c = (int *)malloc(m*p * sizeof(int *));
+//	Nhap ma tran a
+	printf("\n Nhap ma tran a:");
+	NhapMT(a,m,n);
+//	Nhap ma tran b
+	printf("\n Nhap ma tran b:");
+	NhapMT(b,n,p);
+	
+//	Nhan 2 ma tran
+	NhanMT(a,b,c,m,n,p);
+//	Ma tran a
+	printf("\nIn ma tran a:\n");
+		InMT(a,m,n);
+//	Ma tran b
+	printf("\nIn ma tran b:\n");
+	InMT(b,n,p);
+	printf("\nIn ma tran c:\n");
+	InMT(c,m,p);
+	getchar();
+}
