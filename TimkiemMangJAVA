@@ -1,0 +1,102 @@
+FILE MAIN:
+  ----------------------------------------------------------------------------------
+package timkiemmang;
+
+import java.util.Scanner;
+
+public class TimkiemMang {
+static Scanner sc = new Scanner(System.in);
+    static int a[];
+    static int n;
+    
+    public static void Nhapmang(){
+        System.out.println("Nhap so phan tu n: ");
+        n = sc.nextInt();
+        a = new int[n];
+        for(int i = 0; i<n; i++){
+            System.out.print("a["+i+"] = ");
+            a[i] = sc.nextInt();
+        }
+    }
+    
+    public static void Xuatmang(int a[]){
+        for(int i = 0; i<a.length;i++){
+            System.out.print(a[i]+" ");
+        }
+    }
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) throws InterruptedException {
+        System.out.println("Nhap mang: ");
+        Nhapmang();
+        System.out.println("Xuat mang: ");
+        Xuatmang(a);
+            
+        System.out.println("Nhap phan tu can tim trong mang: ");
+        int x = sc.nextInt();
+        
+        //chia du lieu thanh 2 phan
+        Thread_Timkiem t1 = new Thread_Timkiem(a,x);
+        Thread kt1 = new Thread(t1);
+        Thread_Timkiem t2 = new Thread_Timkiem(a,x);
+        Thread kt2 = new Thread(t2);
+        
+        int vitri = a.length/2;
+        t1.a = new int[vitri];
+        t2.a = new int[a.length-vitri];
+        
+         //Tach du lieu thanh 2 mang
+        int dem1=0,dem2=0;
+        for(int i = 0; i<a.length;i++){
+            if(i < vitri) {
+                t1.a[dem1] = a[i];
+                dem1++;
+            }else{
+                t2.a[dem2] = a[i];
+                dem2++;
+            }
+        }
+        
+        System.out.println("Mang 1: ");
+        Xuatmang(t1.a);
+        System.out.println("\nMang 2: ");
+        Xuatmang(t2.a);
+        
+        //cho 2 luong chay song song
+        kt1.join();
+        kt2.join();
+        
+        if (t1.check || t2.check){
+            System.out.println("\nTim thay " + t1.x + "trong mang");
+        }else{
+            System.out.println("\nTim thay " + t2.x + "trong mang");
+        }
+    }
+}
+-------------------------------------------------------------------------------------------------------------
+file THREAD:
+    package timkiemmang;
+
+public class Thread_Timkiem implements Runnable{
+    int a[],x;
+    boolean check = false;
+
+    public Thread_Timkiem(int[] a, int x) {
+        this.a = a;
+        this.x = x;
+    }
+    
+    @Override
+    public void run() {
+        TimKiem();
+    }
+    
+    public void TimKiem(){
+        for(int i = 0; i<a.length;i++){
+            if(a[i]==x)
+                check = true;
+            break;
+        }
+    }
+}
