@@ -1,0 +1,108 @@
+FILE MAIN:
+-----------------------------------------------------------------------------------------------------
+   /*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package timvitri;
+
+import java.util.Scanner;
+
+/**
+ *
+ * @author quang
+ */
+public class Timvitri {
+
+    /**
+     * @param args the command line arguments
+     */
+    //Thuoc tinh static
+    //thong qua static de den cac phuong thuc
+    static Scanner sc = new Scanner(System.in);
+    static int a[];
+    static int n;
+    static int y;
+    
+    public static void Nhapmang(){
+        System.out.println("Nhap so phan tu n: ");
+        n = sc.nextInt();
+        a = new int[n];
+        for(int i = 0; i<n; i++){
+            System.out.print("a["+i+"] = ");
+            a[i] = sc.nextInt();
+        }
+    }
+    
+    public static void Xuatmang(){
+        for(int i = 0; i<a.length;i++){
+            System.out.print(a[i]+" ");
+        }
+    }
+    public static void main(String[] args) throws InterruptedException {
+        System.out.println("Nhap mang: ");
+        Nhapmang();
+         System.out.println("Xuat mang: ");
+        Xuatmang();
+        
+        System.out.println("Nhap vao phan tu can tim: ");
+        int x = sc.nextInt();
+        //chia du lieu thanh 2 phan
+        Thread_Vitri kt1 = new Thread_Vitri();
+        Thread_Vitri kt2 = new Thread_Vitri();
+        
+        int vitri = a.length/2;
+        kt1.a = new int[vitri];
+        kt2.a = new int[a.length-vitri];
+        
+        kt1.x = x;
+        kt2.x = x;
+        
+        //Tach du lieu thanh 2 mang
+        int dem1=0,dem2=0;
+        for(int i = 0; i<a.length;i++){
+            if(i < vitri) {
+                kt1.a[dem1] = a[i];
+                dem1++;
+            }else{
+                kt2.a[dem2] = a[i];
+                dem2++;
+            }
+        }
+        //Cho 2 luong chay song song
+        kt1.start();
+        kt2.start();
+        kt2.join();
+        if(kt1.vitri >= 0) 
+            System.out.println("Tim duoc tai vitri: " + kt1.vitri);
+        if(kt2.vitri >= 0) 
+//            y = a.length / 2 + kt2.vitri;
+            System.out.println("Tim duoc tai vitri: " + kt2.vitri);
+//            System.out.println("Tim duoc tai vitri: " + y);
+        if(kt1.vitri < 0 && kt2.vitri < 0)
+            System.out.println("khong tim thay");
+    }
+}
+-----------------------------------------------------------------------------------------------------
+file thread:
+        package timvitri;
+
+public class Thread_Vitri extends Thread{
+    int vitri = -1,x = 0;
+    int []a;
+    public void Tim(int a[], int x){
+        for(int i = 0; i < a.length; i++){
+            if(a[i] == x){
+                vitri = i;
+                i = a.length;
+            }
+        }
+    }
+    
+    @Override
+    public void run(){
+        Tim(a,x);
+        super.run();
+    }
+}
