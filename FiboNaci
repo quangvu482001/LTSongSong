@@ -1,0 +1,28 @@
+#include <omp.h>
+#include <iostream>
+using namespace std;
+
+int fibonaci(int n){
+	int i,j,kq;
+	if(n < 2) 
+		return n;
+	else {
+		#pragma omp parallel
+		{
+			#pragma omp task shared(i)
+				i = fibonaci(n-1);
+			#pragma omp task shared(j)
+				j = fibonaci(n-2);
+			#pragma omp taskwait
+				kq = i + j;
+		}
+	}
+	return kq;
+}
+
+int main() {
+	int n;
+	cout<<"Nhap n: ";
+	cin>>n;
+	cout<<"kq: "<<fibonaci(n);
+}
