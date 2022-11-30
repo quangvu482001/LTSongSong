@@ -1,0 +1,55 @@
+#include <omp.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <malloc.h>
+
+// tinh trung binh cong cac so chan cua mang su dung om
+
+void tachso(char s[100])
+{
+    int i, j = 0;
+    char s1[100];
+    printf("%s: ", s);
+#pragma omp parallel for num_threads(4)
+    for (i = 0; i < s.strlen(); i++)
+    {
+        printf("\nLuong %d:%d", omp_get_thread_num(), i);
+        if (isdigit(s[i]))
+        {
+            s1[j] = s[i];
+            j++;
+        }
+    }
+
+    printf("\n Phan so : %s", s1);
+}
+
+void tachchu(char s[100])
+{
+    int i, j = 0;
+    char s1[100];
+    printf("%s: ", s);
+#pragma omp parallel for num_threads(4)
+    for (i = 0; i < s.strlen(); i++)
+    {
+        printf("\nLuong %d:%d", omp_get_thread_num(), i);
+        if (isalpha(s[i]))
+        {
+            s1[j] = s[i];
+            j++;
+        }
+    }
+
+    printf("\n Phan chu : %s", s1);
+}
+
+int main()
+{
+    char s[100];
+    printf("Nhap chuoi: ");
+    gets(s);
+    tachso(s);
+    printf("\n============================================\n");
+    tachchu(s);
+    return 0;
+}
